@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reid Revenue Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2ee;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --dark: #111111;
+      --mid: #1e1e1e;
+      --text-muted: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 28px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .nav-email {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-email:hover { color: var(--gold); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.3;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      max-width: 900px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 2;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 56px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.8s forwards;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .btn-secondary:hover {
+      color: var(--white);
+      border-color: var(--white);
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding: 18px 0;
+      background: var(--dark);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 60px;
+      animation: marquee 25s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      flex-shrink: 0;
+    }
+
+    .marquee-item::after {
+      content: '◆';
+      font-size: 0.4rem;
+      color: rgba(201,168,76,0.4);
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* WHAT WE DO */
+    .section {
+      padding: 120px 60px;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 60px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 20px;
+    }
+
+    .service-card {
+      background: var(--mid);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s;
+    }
+
+    .service-card:hover { background: #252525; }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: rgba(201,168,76,0.12);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .service-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+
+    .service-desc {
+      font-size: 0.75rem;
+      line-height: 2;
+      color: var(--text-muted);
+    }
+
+    /* ABOUT */
+    .about-section {
+      padding: 120px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .about-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.2;
+    }
+
+    .about-headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .about-body {
+      font-size: 0.8rem;
+      line-height: 2.2;
+      color: var(--text-muted);
+    }
+
+    .about-body p + p { margin-top: 24px; }
+
+    .stat-row {
+      display: flex;
+      gap: 48px;
+      margin-top: 48px;
+      padding-top: 48px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .stat-item {}
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* PROCESS */
+    .process-section {
+      padding: 120px 60px;
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .process-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 300;
+      margin-bottom: 80px;
+      max-width: 600px;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px;
+    }
+
+    .step {
+      position: relative;
+      padding-top: 32px;
+      border-top: 1px solid rgba(201,168,76,0.3);
+    }
+
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .step-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .step-desc {
+      font-size: 0.75rem;
+      line-height: 2;
+      color: var(--text-muted);
+    }
+
+    /* CTA SECTION */
+    .cta-section {
+      padding: 160px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .cta-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+
+    .cta-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 48px;
+    }
+
+    .cta-headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .cta-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 52px;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 48px 60px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .footer-email {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-email:hover { color: var(--gold); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s, transform 0.8s;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 24px 24px; }
+      .hero { padding: 100px 24px 60px; }
+      .section { padding: 80px 24px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .about-section { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+      .process-section { padding: 80px 24px; }
+      .process-steps { grid-template-columns: 1fr; gap: 40px; }
+      .cta-section { padding: 100px 24px; }
+      footer { padding: 40px 24px; flex-direction: column; gap: 16px; text-align: center; }
+      .stat-row { gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Reid Revenue Solutions</div>
+    <a href="mailto:james@reidrevenuesystems.com" class="nav-email">james@reidrevenuesystems.com</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Business Optimization Consulting · Charlotte, NC</div>
+    <h1 class="hero-headline">We find the money your business is <em>already spending.</em></h1>
+    <p class="hero-sub">Hidden costs, overlooked savings, and untapped opportunities — identified in one free consultation. No obligation. No guesswork.</p>
+    <div class="hero-cta">
+      <a href="https://dreamsscore.com/business" target="_blank" class="btn-primary">Get Your Free Score</a>
+      <a href="#what-we-do" class="btn-secondary">See How It Works</a>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Benefits Optimization</span>
+      <span class="marquee-item">Debt Management</span>
+      <span class="marquee-item">Tax Strategy</span>
+      <span class="marquee-item">Expense Reduction</span>
+      <span class="marquee-item">Retirement Planning</span>
+      <span class="marquee-item">Asset Management</span>
+      <span class="marquee-item">Cash Flow</span>
+      <span class="marquee-item">Risk Management</span>
+      <span class="marquee-item">Benefits Optimization</span>
+      <span class="marquee-item">Debt Management</span>
+      <span class="marquee-item">Tax Strategy</span>
+      <span class="marquee-item">Expense Reduction</span>
+      <span class="marquee-item">Retirement Planning</span>
+      <span class="marquee-item">Asset Management</span>
+      <span class="marquee-item">Cash Flow</span>
+      <span class="marquee-item">Risk Management</span>
+    </div>
+  </div>
+
+  <!-- WHAT WE DO -->
+  <section class="section" id="what-we-do">
+    <div class="section-label">What We Do</div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-title">Benefits Optimization</div>
+        <p class="service-desc">Reduce healthcare and benefits costs for teams of 10 or more — without cutting coverage. Most employers overpay by tens of thousands annually without knowing it.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">02</div>
+        <div class="service-title">Expense Intelligence</div>
+        <p class="service-desc">Energy, payroll, and operational costs analyzed for hidden inefficiencies. We surface what your current advisors aren't looking for.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">03</div>
+        <div class="service-title">Growth Strategy</div>
+        <p class="service-desc">Debt restructuring, R&D credits, retirement plans, and asset protection — connected to the right experts who do the heavy lifting.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section">
+    <div class="reveal">
+      <h2 class="about-headline">You run the business.<br>We find what it's <em>leaving behind.</em></h2>
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num">$500K</div>
+          <div class="stat-label">Avg. annual savings identified</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">15min</div>
+          <div class="stat-label">Free DREAMS assessment</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">Zero</div>
+          <div class="stat-label">Obligation to move forward</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-body reveal">
+      <p>Most business owners come in focused on one problem — rising costs, funding, or taxes — and leave having uncovered multiple areas where they're overspending or missing opportunity entirely.</p>
+      <p>Reid Revenue Solutions acts as your diagnostic partner. We run a proprietary DREAMS Score assessment across six key areas of your business and connect you with vetted specialists who execute the solutions.</p>
+      <p>We don't manage your business. We show you exactly where the money is — and make the right introductions to recover it.</p>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process-section">
+    <h2 class="process-headline reveal">Three steps to <em style="font-style:italic; color:var(--gold)">clarity.</em></h2>
+    <div class="process-steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-title">Schedule a Consultation</div>
+        <p class="step-desc">A free, no-pressure conversation. We ask the right questions to understand where your business is today and where it should be.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-title">Receive Your DREAMS Score</div>
+        <p class="step-desc">A customized report identifying savings opportunities, inefficiencies, and growth strategies across six key areas of your operations.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-title">We Make the Right Connections</div>
+        <p class="step-desc">Only if you want to move forward. We connect you with the right specialists. You stay focused on running your business.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-eyebrow reveal">Start Today — It's Free</div>
+    <h2 class="cta-headline reveal">Is your business leaving<br><em>$50K–$500K</em> on the table?</h2>
+    <p class="cta-sub reveal">Find out in 15 minutes. No cost. No obligation. No guesswork.</p>
+    <div class="reveal">
+      <a href="https://dreamsscore.com/business" target="_blank" class="btn-primary">Get Your Free DREAMS Score</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Reid Revenue Solutions</div>
+    <div class="footer-copy">© 2026 Reid Revenue Solutions · Charlotte, NC</div>
+    <a href="mailto:james@reidrevenuesystems.com" class="footer-email">james@reidrevenuesystems.com</a>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
